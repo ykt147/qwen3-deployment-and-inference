@@ -4,8 +4,8 @@ import time
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, DynamicCache
 
-# =================配置区域=================
-MODEL_NAME = "/public/home/ykt147/model/Qwen3-4B-Instruct-2507"  # 推荐用于测试的轻量模型，或者 "meta-llama/Llama-2-7b-hf"
+#配置区域
+MODEL_NAME = "path/to/Qwen3-4B-Instruct-2507"  # 推荐用于测试的轻量模型，或者 "meta-llama/Llama-2-7b-hf"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 WARMUP_STEPS = 2  # 预热次数
 
@@ -20,7 +20,6 @@ model = AutoModelForCausalLM.from_pretrained(MODEL_NAME, torch_dtype=torch.float
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
-# =================工具函数=================
 
 def get_gpu_memory():
     """获取当前显存占用 (GB)"""
@@ -60,7 +59,7 @@ def run_decode_step(next_token, past_key_values):
     duration_ms = (time.time() - start_time) * 1000
     return outputs.logits, outputs.past_key_values, duration_ms
 
-# =================预热=================
+#预热
 print("\n🔥 正在进行预热 (Warmup)...")
 dummy_input = torch.randint(0, 1000, (1, 32)).to(DEVICE)
 with torch.no_grad():
@@ -70,8 +69,7 @@ with torch.no_grad():
 print("预热完成。")
 clear_memory()
 
-# =================修正后的实验 A=================
-print("\n🚀 实验 A (修正版): 输入长度对 Prefill 的影响 (扩展到 4096)")
+
 print(f"{'Input Len':<12} | {'TTFT (ms)':<12} | {'Throughput (tok/s)':<20} | {'VRAM (GB)':<10}")
 print("-" * 65)
 
@@ -108,8 +106,8 @@ for input_len in input_lens:
     print(f"{input_len:<12} | {ttft:<12.2f} | {throughput:<20.2f} | {vram_used:<10.2f}")
     results_a.append([input_len, ttft, throughput, vram_used])
     
-# =================实验 B: 输出长度对 Decode 的影响=================
-print("\n📉 实验 B: 输出长度对 Decode 的影响")
+# 输出长度对 Decode 的影响
+
 print(f"{'Output Len':<12} | {'TBT Mean (ms)':<14} | {'Throughput (tok/s)':<20} | {'KV Inc (GB)':<12}")
 print("-" * 70)
 
@@ -153,8 +151,7 @@ for output_len in output_lens:
 
 df_b = pd.DataFrame(results_b, columns=["Output Length", "TBT Mean (ms)", "Decode Throughput (tok/s)", "KV Cache Inc (GB)"])
 
-# =================实验 C: Batch Size 的影响=================
-print("\n📦 实验 C: Batch Size 的影响")
+# Batch Size 的影响
 print(f"{'Batch Size':<12} | {'TTFT (ms)':<12} | {'Throughput (tok/s)':<20} | {'VRAM (GB)':<10}")
 print("-" * 65)
 
@@ -201,7 +198,5 @@ for bs in batch_sizes:
 
 df_c = pd.DataFrame(results_c, columns=["Batch Size", "TTFT (ms)", "Throughput (tok/s)", "VRAM (GB)"])
 
-# =================总结=================
 print("\n" + "="*30)
-print("实验结束。")
 print("数据已生成在 DataFrame df_a, df_b, df_c 中。")
