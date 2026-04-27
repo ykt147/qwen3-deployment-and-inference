@@ -1,0 +1,28 @@
+name: mls1
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+
+dependencies:
+  - python=3.13.5
+
+  - pytorch=2.8.0
+  - torchvision=0.18.0
+  - torchaudio=2.3.0
+  - pytorch-cuda=12.8
+
+  - pip
+
+  - pip:
+      - transformers==4.57.0
+      - accelerate
+      - sentencepiece
+      - tokenizers
+      - protobuf
+      - tqdm
+
+      - numpy==1.26.4
+      - safetensors
+      - typing-extensions
+      - requests
