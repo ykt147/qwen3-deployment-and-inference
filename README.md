@@ -46,14 +46,14 @@
 ├── environment.yml       # Conda 环境
 ├── README.md
 └── 实验报告.md
-
+```
 ## ⚙️ 环境要求
 
 ```bash
 Python: 3.13.5
 PyTorch: 2.8.0 (CUDA 12.8)
 Transformers: 4.57.0
-
+```
 ## ⚙️ 推荐 GPU
 
 - NVIDIA A100 / H100  
