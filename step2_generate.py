@@ -2,7 +2,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-model_path = "/public/home/ykt147/model/Qwen3-4B-Instruct-2507"
+model_path = "path/to/Qwen3-4B-Instruct-2507"
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
