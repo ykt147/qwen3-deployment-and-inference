@@ -10,7 +10,7 @@ def get_kv_cache_size(past_key_values):
             total_bytes += tensor.numel() * tensor.element_size()
     return total_bytes
 
-model_path = "/public/home/ykt147/model/Qwen3-4B-Instruct-2507"
+model_path = "path/to/Qwen3-4B-Instruct-2507"
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
@@ -36,9 +36,8 @@ inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
 input_ids = inputs["input_ids"]
 
-# ======================
+
 #  Prefill
-# ======================
 torch.cuda.synchronize()
 start = time.time()
 
@@ -59,9 +58,8 @@ print(f"TTFT (Prefill time): {prefill_time * 1000:.2f} ms")
 kv_size = get_kv_cache_size(past_key_values)
 print(f"KV Cache size: {kv_size / 1024 / 1024:.2f} MB")
 
-# ======================
+
 #   Decode
-# ======================
 decode_times = []
 generated = [next_token]
 
